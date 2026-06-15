@@ -25,9 +25,11 @@ SECRET_KEY = 'django-insecure-766i6doy$jff*tp#_m=!w*0e(!5jb=n5o=o6evko@m(dckop6#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
+ALLOWED_HOSTS = [
+    "ecommerceapi-wp19.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 # Application definition
 
 INSTALLED_APPS = [
