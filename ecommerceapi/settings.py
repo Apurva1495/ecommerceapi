@@ -41,9 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ecommerce',
     'drf_spectacular',
-
-      
+     
 ]
+
+AUTH_USER_MODEL = 'ecommerce.User'
 
 REST_FRAMEWORK = {
     # YOUR SETTINGS
