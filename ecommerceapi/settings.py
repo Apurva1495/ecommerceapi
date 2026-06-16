@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ecommerce',
     'drf_spectacular',
+    'rest_framework',
+
      
 ]
 
