@@ -1,55 +1,102 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from drf_spectacular.utils import (
-    extend_schema,
-)
-from .serializers import RegisterSerializers ,LoginSerializers
 from rest_framework import status
+
+from drf_spectacular.utils import extend_schema
+
+
+from .serializers import (
+    RegisterSerializer,
+    LoginSerializer,
+    LogoutSerializer
+)
+
 
 
 class RegisterView(APIView):
 
     @extend_schema(
-            request=RegisterSerializers,
-            responses=RegisterSerializers
+        request=RegisterSerializer,
+        responses=RegisterSerializer,
+        description="Create new user account"
     )
-    def post(self, request):
+    def post(self,request):
 
-        serializers = RegisterSerializers(
+        serializer=RegisterSerializer(
             data=request.data
         )
 
-        if serializers.is_valid():
+        if serializer.is_valid():
 
-            serializers.save()
+            serializer.save()
 
             return Response(
-                serializers.data,
+                serializer.data,
                 status=status.HTTP_201_CREATED
             )
 
+
         return Response(
-            serializers.errors,
-            status=status.HTTP_400_BAD_REQUEST
+            serializer.errors,
+            status=400
         )
 
 
 class LoginView(APIView):
 
     @extend_schema(
-            request=LoginSerializers,
-            responses=LoginSerializers
+        request=LoginSerializer,
+        responses=LoginSerializer,
+        description="Login using email or mobile and get JWT tokens"
     )
     def post(self,request):
-        serializers = LoginSerializers(
+
+        serializer=LoginSerializer(
             data=request.data
         )
 
-        if serializers.is_valid():
-               return Response(serializers.validated_data,status=status.HTTP_200_OK)
-        
+        if serializer.is_valid():
+
+            return Response(
+                serializer.validated_data,
+                status=status.HTTP_200_OK
+            )
 
         return Response(
-         serializers.errors,
-         status=status.HTTP_400_BAD_REQUEST   
+            serializer.errors,
+            status=400
+        )
+
+class LogoutView(APIView):
+
+
+    @extend_schema(
+        request=LogoutSerializer,
+        responses={
+            200:{
+                "message":"Logout Successfully"
+            }
+        },
+        description="Blacklist refresh token"
+    )
+    def post(self,request):
+
+        serializer=LogoutSerializer(
+            data=request.data
+        )
+
+
+        if serializer.is_valid():
+
+            return Response(
+                {
+                    "message":"Logout Successfully"
+                },
+                status=status.HTTP_200_OK
+            )
+
+
+        return Response(
+            serializer.errors,
+            status=400
         )
