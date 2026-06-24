@@ -1,6 +1,26 @@
+# Virtual environment
 env/
 venv/
+.venv/
+
+# Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Django local database (SQLite)
+db.sqlite3
 db.ecommerceapi
+
+# Environment variables
 .env
+
+# Django files
+*.log
+staticfiles/
+media/
+
+# IDE
+.vscode/
+.idea/
