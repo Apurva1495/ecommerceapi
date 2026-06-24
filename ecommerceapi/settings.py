@@ -49,8 +49,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     
-
-     
 ]
 
 AUTH_USER_MODEL = 'ecommerce.User'
@@ -60,13 +58,7 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES':(
        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES':(
-
-'rest_framework_simplejwt.authentication.JWTAuthentication',
-
-)
-
+    )
 }
 
 
@@ -133,17 +125,23 @@ WSGI_APPLICATION = 'ecommerceapi.wsgi.application'
 # }
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecommerceapi_django_render",
-        "USER": "ecommerceapi_django_render_user",
-        "PASSWORD": "PbP6YSgsc9iRh0pxlg19l1hEQUpiL4tm",
-        "HOST": "dpg-d8tuq33tqb8s73eq4e60-a.oregon-postgres.render.com",
-        "PORT": "5432",
-    }
+    "default": dj_database_url.config(
+        conn_max_age=600
+    )
 }
 
-DATABASES['default'] =dj_database_url.parse('postgresql://ecommerceapi_django_render_user:PbP6YSgsc9iRh0pxlg19l1hEQUpiL4tm@dpg-d8tuq33tqb8s73eq4e60-a.oregon-postgres.render.com/ecommerceapi_django_render')
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecommerceapi_django_render",
+#         "USER": "ecommerceapi_django_render_user",
+#         "PASSWORD": "PbP6YSgsc9iRh0pxlg19l1hEQUpiL4tm",
+#         "HOST": "dpg-d8tuq33tqb8s73eq4e60-a.oregon-postgres.render.com",
+#         "PORT": "5432",
+#     }
+# }
+
+# DATABASES['default'] =dj_database_url.parse('postgresql://ecommerceapi_django_render_user:PbP6YSgsc9iRh0pxlg19l1hEQUpiL4tm@dpg-d8tuq33tqb8s73eq4e60-a.oregon-postgres.render.com/ecommerceapi_django_render')
 # render postgresql url
 # postgresql://ecommerceapi_django_render_user:PbP6YSgsc9iRh0pxlg19l1hEQUpiL4tm@dpg-d8tuq33tqb8s73eq4e60-a.oregon-postgres.render.com/ecommerceapi_django_render
 
