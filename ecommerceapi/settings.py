@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-
+import dj_database_url
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -125,13 +125,27 @@ WSGI_APPLICATION = 'ecommerceapi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.ecommerceapi',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.ecommerceapi',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "ecommerceapi_django_render",
+        "USER": "ecommerceapi_django_render_user",
+        "PASSWORD": "PbP6YSgsc9iRh0pxlg19l1hEQUpiL4tm",
+        "HOST": "dpg-d8tuq33tqb8s73eq4e60-a.oregon-postgres.render.com",
+        "PORT": "5432",
     }
 }
 
+DATABASES['default'] =dj_database_url.parse('postgresql://ecommerceapi_django_render_user:PbP6YSgsc9iRh0pxlg19l1hEQUpiL4tm@dpg-d8tuq33tqb8s73eq4e60-a.oregon-postgres.render.com/ecommerceapi_django_render')
+# render postgresql url
+# postgresql://ecommerceapi_django_render_user:PbP6YSgsc9iRh0pxlg19l1hEQUpiL4tm@dpg-d8tuq33tqb8s73eq4e60-a.oregon-postgres.render.com/ecommerceapi_django_render
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
