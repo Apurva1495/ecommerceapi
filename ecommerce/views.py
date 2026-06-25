@@ -16,7 +16,10 @@ from .models import (
     Category,
     Product
 )
-
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser
+)
 class RegisterView(APIView):
 
     @extend_schema(
@@ -150,12 +153,21 @@ class BrandListView(APIView):
             status=status.HTTP_200_OK
         )
 
+    parser_classes = [
+        MultiPartParser,
+        FormParser
+    ]
+
+
     @extend_schema(
-    request={
-        "multipart/form-data": BrandSerializer
-    },
-    responses=BrandSerializer
-)
+        request={
+            "multipart/form-data": BrandSerializer
+        },
+        responses={
+            201: BrandSerializer
+        },
+        description="Create brand with logo upload"
+    )
     def post(self, request):
 
         serializer = BrandSerializer(
