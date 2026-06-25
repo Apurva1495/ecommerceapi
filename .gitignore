@@ -15,6 +15,7 @@ db.ecommerceapi
 
 # Environment variables
 .env
+.env.*
 
 # Django files
 *.log
@@ -24,3 +25,7 @@ media/
 # IDE
 .vscode/
 .idea/
+
+# OS files
+.DS_Store
+Thumbs.db

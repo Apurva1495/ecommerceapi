@@ -1,7 +1,13 @@
-from .models import User
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from .models import (
+    User,
+    Brand,
+    Category,
+    Product,
+    ProductImage
+)
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -126,3 +132,87 @@ class LogoutSerializer(serializers.Serializer):
             )
 
         return data
+   
+class BrandSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = Brand
+
+        fields = [
+            "id",
+            "name",
+            "logo"
+        ]
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = Category
+
+        fields = [
+            "id",
+            "name",
+            "image"
+        ]
+
+class ProductImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = ProductImage
+
+        fields = [
+            "id",
+            "image",
+            "is_primary"
+        ]
+
+class ProductSerializer(serializers.ModelSerializer):
+
+
+    brand = BrandSerializer(
+        read_only=True
+    )
+
+
+    category = CategorySerializer(
+        read_only=True
+    )
+
+
+    images = ProductImageSerializer(
+        many=True,
+        read_only=True
+    )
+
+
+    class Meta:
+
+        model = Product
+
+
+        fields = [
+
+            "id",
+
+            "name",
+
+            "description",
+
+            "price",
+
+            "discount_price",
+
+            "stock",
+
+            "is_active",
+
+            "brand",
+
+            "category",
+
+            "images"
+
+        ]

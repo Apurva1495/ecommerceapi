@@ -1,15 +1,21 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
 from drf_spectacular.utils import extend_schema
-
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
-    LogoutSerializer
+    LogoutSerializer,
+    ProductSerializer,
+    BrandSerializer,
+    CategorySerializer,
+    ProductSerializer
 )
-
+from .models import (
+    Brand,
+    Category,
+    Product
+)
 
 class RegisterView(APIView):
 
@@ -123,3 +129,123 @@ class LogoutView(APIView):
             status=status.HTTP_400_BAD_REQUEST
 
         )
+    
+
+class ProductListView(APIView):
+
+    @extend_schema(
+
+        responses=ProductSerializer,
+
+        description="Get all active products"
+
+    )
+    def get(self, request):
+
+        products = Product.objects.filter(
+            is_active=True
+        )
+
+        serializer = ProductSerializer(
+            products,
+            many=True
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+class BrandListView(APIView):
+
+    @extend_schema(
+        responses=BrandSerializer(many=True),
+        description="Get all brands"
+    )
+
+    def get(self, request):
+        brands = Brand.objects.all()
+        serializer = BrandSerializer(
+            brands,
+            many=True
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+class CategoryListView(APIView):
+
+    @extend_schema(
+        responses=CategorySerializer(many=True),
+        description="Get all categories"
+    )
+
+    def get(self,request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(
+            categories,
+            many=True
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+class ProductListView(APIView):
+
+    @extend_schema(
+        responses=ProductSerializer(many=True),
+        description="Get all products with brand category and images"
+    )
+
+    def get(self,request):
+        products = Product.objects.filter(
+            is_active=True
+        )
+
+        serializer = ProductSerializer(
+            products,
+            many=True
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+class ProductDetailView(APIView):
+
+    @extend_schema(
+        responses=ProductSerializer,
+        description="Get product details by id"
+    )
+
+    def get(self,request,pk):
+
+        try:
+            product = Product.objects.get(
+                id=pk,
+                is_active=True
+            )
+
+        except Product.DoesNotExist:
+
+            return Response(
+                {
+                    "message":"Product not found"
+                },
+
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = ProductSerializer(
+            product
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )        

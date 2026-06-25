@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import dj_database_url
 from datetime import timedelta
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -123,6 +124,8 @@ WSGI_APPLICATION = 'ecommerceapi.wsgi.application'
 #         'NAME': BASE_DIR / 'db.ecommerceapi',
 #     }
 # }
+
+load_dotenv()
 
 DATABASES = {
     "default": dj_database_url.config(
