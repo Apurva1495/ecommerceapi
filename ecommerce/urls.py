@@ -1,18 +1,25 @@
 from django.urls import path
 
 from .views import (
+
     RegisterView,
     LoginView,
     LogoutView,
 
     BrandListView,
+    BrandDetailView,
+
     CategoryListView,
+    CategoryDetailView,
+
     ProductListView,
     ProductDetailView
+
 )
 
-urlpatterns = [
 
+
+urlpatterns = [
     path(
         'v1/register/',
         RegisterView.as_view(),
@@ -38,19 +45,34 @@ urlpatterns = [
     ),
 
     path(
+        'v1/brands/<int:pk>/',
+        BrandDetailView.as_view(),
+        name='brand-detail'
+    ),
+
+    path(
         'v1/categories/',
         CategoryListView.as_view(),
         name='categories'
     ),
+
+    path(
+        'v1/categories/<int:pk>/',
+        CategoryDetailView.as_view(),
+        name='category-detail'
+    ),
+
     path(
         'v1/products/',
         ProductListView.as_view(),
         name='products'
     ),
+
     path(
         'v1/products/<int:pk>/',
         ProductDetailView.as_view(),
         name='product-detail'
     ),
+
 
 ]
