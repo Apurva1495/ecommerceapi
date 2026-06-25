@@ -135,6 +135,8 @@ class LogoutSerializer(serializers.Serializer):
    
 class BrandSerializer(serializers.ModelSerializer):
 
+    logo = serializers.ImageField()
+
     class Meta:
 
         model = Brand

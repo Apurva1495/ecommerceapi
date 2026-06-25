@@ -153,12 +153,13 @@ class BrandListView(APIView):
             status=status.HTTP_200_OK
         )
 
+
+
     parser_classes = [
         MultiPartParser,
         FormParser
     ]
-
-
+    
     @extend_schema(
         request={
             "multipart/form-data": BrandSerializer
