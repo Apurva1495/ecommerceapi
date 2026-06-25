@@ -151,10 +151,11 @@ class BrandListView(APIView):
         )
 
     @extend_schema(
-        request=BrandSerializer,
-        responses=BrandSerializer,
-        description="Create new brand"
-    )
+    request={
+        "multipart/form-data": BrandSerializer
+    },
+    responses=BrandSerializer
+)
     def post(self, request):
 
         serializer = BrandSerializer(
