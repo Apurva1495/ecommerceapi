@@ -135,7 +135,6 @@ class LogoutSerializer(serializers.Serializer):
    
 class BrandSerializer(serializers.ModelSerializer):
 
-    logo = serializers.ImageField()
 
     class Meta:
 
@@ -146,6 +145,23 @@ class BrandSerializer(serializers.ModelSerializer):
             "name",
             "logo"
         ]
+
+
+class BrandCreateSerializer(serializers.ModelSerializer):
+
+    logo = serializers.ImageField(
+        required=False
+    )
+
+
+    class Meta:
+
+        model = Brand
+
+        fields = [
+            "name",
+            "logo"
+        ]        
 
 class CategorySerializer(serializers.ModelSerializer):
 

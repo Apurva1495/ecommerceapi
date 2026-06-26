@@ -9,7 +9,7 @@ from .serializers import (
     ProductSerializer,
     BrandSerializer,
     CategorySerializer,
-    
+    BrandCreateSerializer
 )
 from .models import (
     Brand,
@@ -153,25 +153,18 @@ class BrandListView(APIView):
             status=status.HTTP_200_OK
         )
 
-
-
+   
     parser_classes = [
         MultiPartParser,
         FormParser
     ]
-    
     @extend_schema(
-        request={
-            "multipart/form-data": BrandSerializer
-        },
-        responses={
-            201: BrandSerializer
-        },
-        description="Create brand with logo upload"
+        request=BrandCreateSerializer,
+        responses=BrandSerializer
     )
     def post(self, request):
 
-        serializer = BrandSerializer(
+        serializer = BrandCreateSerializer(
             data=request.data
         )
 
