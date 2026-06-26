@@ -250,3 +250,28 @@ class ProductSerializer(serializers.ModelSerializer):
             "images"
 
         ]
+class ProductCreateSerializer(serializers.ModelSerializer):
+
+    images = serializers.ListField(
+        child=serializers.ImageField(),
+        required=False,
+        write_only=True
+    )
+
+    class Meta:
+
+        model = Product
+
+        fields = [
+
+            "brand",
+            "category",
+            "name",
+            "description",
+            "price",
+            "discount_price",
+            "stock",
+            "is_active",
+            "images",
+
+        ]        
