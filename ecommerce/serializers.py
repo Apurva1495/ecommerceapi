@@ -250,6 +250,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "images"
 
         ]
+
 class ProductCreateSerializer(serializers.ModelSerializer):
 
     images = serializers.ListField(
@@ -294,12 +295,49 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         for image in images:
 
             ProductImage.objects.create(
-
                 product=product,
+                image=image
+            )
+
+
+        return product
+
+
+
+    def update(self, instance, validated_data):
+
+        images = validated_data.pop(
+            "images",
+            []
+        )
+
+
+        # update product fields
+
+        for attr, value in validated_data.items():
+
+            setattr(
+                instance,
+                attr,
+                value
+            )
+
+
+        instance.save()
+
+
+
+        # add new images
+
+        for image in images:
+
+            ProductImage.objects.create(
+
+                product=instance,
 
                 image=image
 
             )
 
 
-        return product
+        return instance        
