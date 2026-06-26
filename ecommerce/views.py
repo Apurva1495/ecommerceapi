@@ -10,14 +10,12 @@ from .serializers import (
     BrandSerializer,
     CategorySerializer,
     BrandCreateSerializer,
-    CategoryCreateSerializer,
-    ProductCreateSerializer
+    CategoryCreateSerializer
 )
 from .models import (
     Brand,
     Category,
-    Product,
-    ProductImage
+    Product
 )
 from rest_framework.parsers import (
     MultiPartParser,
@@ -445,50 +443,26 @@ class ProductListView(APIView):
 
         return Response(serializer.data)
 
-    parser_classes = [
-        MultiPartParser,
-        FormParser
-    ]
-
+    
     @extend_schema(
-        request=ProductCreateSerializer,
+        request=ProductSerializer,
         responses=ProductSerializer,
         description="Create product"
     )
     def post(self,request):
 
-        serializer=ProductCreateSerializer(
+        serializer=ProductSerializer(
             data=request.data
         )
 
         if serializer.is_valid():
 
-            product= serializer.save()
-
-            images = request.FILES.getlist(
-            "images"
-        )
-
-        for image in images:
-
-
-            ProductImage.objects.create(
-
-                product=product,
-
-                image=image
-
-            )
-    
+            serializer.save()
 
             return Response(
-
-            ProductSerializer(product).data,
-
-            status=201
-
-        )
-
+                serializer.data,
+                status=201
+            )
 
         return Response(
             serializer.errors,
@@ -529,13 +503,8 @@ class ProductDetailView(APIView):
 
         return Response(serializer.data)
     
-    parser_classes = [
-        MultiPartParser,
-        FormParser
-    ]
-    
     @extend_schema(
-        request=ProductCreateSerializer,
+        request=ProductSerializer,
         responses=ProductSerializer,
         description="Update product"
     )
@@ -543,16 +512,7 @@ class ProductDetailView(APIView):
 
         product=self.get_object(pk)
 
-        if not product:
-
-            return Response(
-                {
-                    "message":"Product not found"
-                },
-                status=404
-            )
-        
-        serializer=ProductCreateSerializer(
+        serializer=ProductSerializer(
             product,
             data=request.data
         )
@@ -561,28 +521,8 @@ class ProductDetailView(APIView):
 
             serializer.save()
 
-            images = request.FILES.getlist(
-                "images"
-            )
-
-            for image in images:
-
-                ProductImage.objects.create(
-
-                    product=product,
-
-                    image=image
-
-                )
-
             return Response(
-
-                ProductSerializer(
-                    product
-                ).data,
-
-                status=200
-
+                serializer.data
             )
 
         return Response(
