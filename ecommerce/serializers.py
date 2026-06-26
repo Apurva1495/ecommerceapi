@@ -258,6 +258,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         write_only=True
     )
 
+
     class Meta:
 
         model = Product
@@ -272,6 +273,33 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             "discount_price",
             "stock",
             "is_active",
-            "images",
+            "images"
 
-        ]        
+        ]
+
+
+    def create(self, validated_data):
+
+        images = validated_data.pop(
+            "images",
+            []
+        )
+
+
+        product = Product.objects.create(
+            **validated_data
+        )
+
+
+        for image in images:
+
+            ProductImage.objects.create(
+
+                product=product,
+
+                image=image
+
+            )
+
+
+        return product
