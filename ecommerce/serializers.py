@@ -175,6 +175,22 @@ class CategorySerializer(serializers.ModelSerializer):
             "image"
         ]
 
+class CategoryCreateSerializer(serializers.ModelSerializer):
+
+    image = serializers.ImageField(
+        required=False
+    )
+
+
+    class Meta:
+
+        model = Category
+
+        fields = [
+            "name",
+            "image"
+        ]
+
 class ProductImageSerializer(serializers.ModelSerializer):
 
     class Meta:

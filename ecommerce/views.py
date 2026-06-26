@@ -9,7 +9,8 @@ from .serializers import (
     ProductSerializer,
     BrandSerializer,
     CategorySerializer,
-    BrandCreateSerializer
+    BrandCreateSerializer,
+    CategoryCreateSerializer
 )
 from .models import (
     Brand,
@@ -302,14 +303,20 @@ class CategoryListView(APIView):
 
         return Response(serializer.data)
 
+    parser_classes = [
+        MultiPartParser,
+        FormParser
+    ]
+
     @extend_schema(
-        request=CategorySerializer,
+        request=CategoryCreateSerializer,
         responses=CategorySerializer,
-        description="Create category"
+        description="Create category with image upload"
     )
+    
     def post(self,request):
 
-        serializer=CategorySerializer(
+        serializer=CategoryCreateSerializer(
             data=request.data
         )
 
@@ -318,8 +325,12 @@ class CategoryListView(APIView):
             serializer.save()
 
             return Response(
-                serializer.data,
-                status=201
+
+                CategorySerializer(
+                    serializer.instance
+                ).data,
+
+                status=status.HTTP_201_CREATED
             )
 
 
@@ -342,6 +353,12 @@ class CategoryDetailView(APIView):
 
             return None
 
+
+    parser_classes = [
+        MultiPartParser,
+        FormParser
+    ]
+    
     @extend_schema(
         responses=CategorySerializer,
         description="Get category by id"
@@ -363,11 +380,13 @@ class CategoryDetailView(APIView):
 
         return Response(serializer.data)
 
+
+
     @extend_schema(
-        request=CategorySerializer,
-        responses=CategorySerializer,
-        description="Update category"
-    )
+    request=CategoryCreateSerializer,
+    responses=CategorySerializer,
+    description="Update category with image upload"
+    ) 
     def put(self,request,pk):
 
         category=self.get_object(pk)
