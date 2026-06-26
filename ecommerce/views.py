@@ -446,56 +446,61 @@ class ProductListView(APIView):
         return Response(serializer.data)
 
     parser_classes = [
-        MultiPartParser,
-        FormParser
-    ]
+    MultiPartParser,
+    FormParser
+]
+
 
     @extend_schema(
-        request=ProductCreateSerializer,
-        responses=ProductSerializer,
-        description="Create product"
-    )
-    def post(self,request):
+    request=ProductCreateSerializer,
+    responses=ProductSerializer,
+    description="Create product"
+   )
+    def post(self, request):
 
-        serializer=ProductCreateSerializer(
+        serializer = ProductCreateSerializer(
             data=request.data
         )
 
+
         if serializer.is_valid():
 
-            product= serializer.save()
+            product = serializer.save()
+
 
             images = request.FILES.getlist(
-            "images"
-        )
-
-        for image in images:
-
-
-            ProductImage.objects.create(
-
-                product=product,
-
-                image=image
-
+                "images"
             )
-    
+
+
+            for image in images:
+
+                ProductImage.objects.create(
+
+                    product=product,
+
+                    image=image
+
+                )
+
 
             return Response(
 
-            ProductSerializer(product).data,
+                ProductSerializer(product).data,
 
-            status=201
+                status=201
 
-        )
+            )
 
 
         return Response(
+
             serializer.errors,
+
             status=400
+
         )
-
-
+    
 class ProductDetailView(APIView):
 
     def get_object(self,pk):
