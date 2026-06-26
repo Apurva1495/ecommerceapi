@@ -549,20 +549,6 @@ class ProductDetailView(APIView):
 
             serializer.save()
 
-            images = request.FILES.getlist(
-                "images"
-            )
-
-            for image in images:
-
-                ProductImage.objects.create(
-
-                    product=product,
-
-                    image=image
-
-                )
-
             return Response(
 
                 ProductSerializer(
