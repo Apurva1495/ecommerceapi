@@ -220,8 +220,12 @@ class BrandDetailView(APIView):
 
         return Response(serializer.data)
 
+    parser_classes = [
+        MultiPartParser,
+        FormParser
+    ]
     @extend_schema(
-        request=BrandSerializer,
+        request=BrandCreateSerializer,
         responses=BrandSerializer,
         description="Update brand"
     )
@@ -236,7 +240,7 @@ class BrandDetailView(APIView):
                 status=404
             )
 
-        serializer=BrandSerializer(
+        serializer=BrandCreateSerializer(
             brand,
             data=request.data
         )
@@ -245,7 +249,14 @@ class BrandDetailView(APIView):
 
             serializer.save()
 
-            return Response(serializer.data)
+            return Response(
+
+            BrandSerializer(
+                serializer.instance
+            ).data,
+
+            status=status.HTTP_200_OK
+        )
 
         return Response(
             serializer.errors,
