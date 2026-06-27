@@ -227,6 +227,9 @@ class Product(models.Model):
 
         on_delete=models.CASCADE,
 
+        null=True,
+
+
         related_name="products"
 
     )
