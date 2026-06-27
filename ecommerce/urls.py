@@ -13,7 +13,9 @@ from .views import (
     CategoryDetailView,
 
     ProductListView,
-    ProductDetailView
+    ProductDetailView,
+
+    GenderListView,
 
 )
 
@@ -36,6 +38,12 @@ urlpatterns = [
         'v1/logout/',
         LogoutView.as_view(),
         name='logout'
+    ),
+
+     path(
+        'v1/genders/',
+        GenderListView.as_view(),
+        name='genders'
     ),
 
     path(

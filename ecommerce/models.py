@@ -69,6 +69,8 @@ class UserManager(BaseUserManager):
 
         return user
 
+
+
 class User(AbstractBaseUser, PermissionsMixin):
 
 
@@ -128,6 +130,34 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
+
+
+class Gender(models.Model):
+
+
+    name = models.CharField(
+
+        max_length=50,
+
+        unique=True
+
+    )
+
+
+    created_at = models.DateTimeField(
+
+        auto_now_add=True
+
+    )
+
+
+    def __str__(self):
+
+        return self.name
+
+
+
+
 class Brand(models.Model):
 
     name = models.CharField(
@@ -157,6 +187,9 @@ class Brand(models.Model):
 
         return self.name
 
+
+
+
 class Category(models.Model):
 
     name = models.CharField(
@@ -181,7 +214,22 @@ class Category(models.Model):
 
         return self.name
 
+
+
+
+
 class Product(models.Model):
+
+
+    gender = models.ForeignKey(
+
+        Gender,
+
+        on_delete=models.CASCADE,
+
+        related_name="products"
+
+    )
 
 
     brand = models.ForeignKey(
@@ -206,12 +254,17 @@ class Product(models.Model):
     )
 
 
+
     name = models.CharField(
+
         max_length=200
+
     )
 
 
+
     description = models.TextField()
+
 
 
     price = models.DecimalField(
@@ -221,6 +274,7 @@ class Product(models.Model):
         decimal_places=2
 
     )
+
 
 
     discount_price = models.DecimalField(
@@ -236,11 +290,13 @@ class Product(models.Model):
     )
 
 
+
     stock = models.PositiveIntegerField(
 
         default=0
 
     )
+
 
 
     is_active = models.BooleanField(
@@ -250,11 +306,13 @@ class Product(models.Model):
     )
 
 
+
     created_at=models.DateTimeField(
 
         auto_now_add=True
 
     )
+
 
 
     updated_at=models.DateTimeField(
@@ -264,9 +322,14 @@ class Product(models.Model):
     )
 
 
+
     def __str__(self):
 
         return self.name
+
+
+
+
 
 class ProductImage(models.Model):
 
@@ -282,11 +345,13 @@ class ProductImage(models.Model):
     )
 
 
+
     image = models.ImageField(
 
         upload_to="products/"
 
     )
+
 
 
     is_primary = models.BooleanField(
@@ -296,6 +361,7 @@ class ProductImage(models.Model):
     )
 
 
+
     created_at=models.DateTimeField(
 
         auto_now_add=True
@@ -303,6 +369,7 @@ class ProductImage(models.Model):
     )
 
 
+
     def __str__(self):
 
-        return self.product.name                
+        return self.product.name

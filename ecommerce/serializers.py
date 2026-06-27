@@ -1,13 +1,16 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+
 from .models import (
     User,
+    Gender,
     Brand,
     Category,
     Product,
     ProductImage
 )
+
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -52,13 +55,14 @@ class LoginSerializer(serializers.Serializer):
         write_only=True
     )
 
-    def validate(self, data):
 
+    def validate(self, data):
 
         login = data.get("login")
         password = data.get("password")
 
         user = None
+
 
         if "@" in login:
 
@@ -78,44 +82,57 @@ class LoginSerializer(serializers.Serializer):
                     mobile=login
                 )
 
+
                 if not user.check_password(password):
 
                     user = None
+
 
             except User.DoesNotExist:
 
                 user = None
 
+
+
         if not user:
+
             raise serializers.ValidationError(
-
                 "Invalid credentials"
-
             )
 
+
+
         refresh = RefreshToken.for_user(user)
+
 
         return {
 
             "user":{
 
-                "id": user.id,
-                "first_name": user.first_name,
-                "email": user.email,
-                "mobile": user.mobile
+                "id":user.id,
+                "first_name":user.first_name,
+                "email":user.email,
+                "mobile":user.mobile
 
             },
 
-            "access": str(refresh.access_token),
-            "refresh": str(refresh)
+
+            "access":str(refresh.access_token),
+
+            "refresh":str(refresh)
 
         }
+
+
+
+
 
 class LogoutSerializer(serializers.Serializer):
 
     refresh = serializers.CharField()
 
-    def validate(self, data):
+
+    def validate(self,data):
 
         try:
 
@@ -125,14 +142,48 @@ class LogoutSerializer(serializers.Serializer):
 
             token.blacklist()
 
+
         except Exception:
 
             raise serializers.ValidationError(
                 "Invalid token"
             )
 
+
         return data
-   
+
+
+
+
+# =========================
+# Gender Serializer
+# =========================
+
+
+class GenderSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+
+        model = Gender
+
+
+        fields = [
+
+            "id",
+
+            "name"
+
+        ]
+
+
+
+
+# =========================
+# Brand
+# =========================
+
+
 class BrandSerializer(serializers.ModelSerializer):
 
 
@@ -140,14 +191,21 @@ class BrandSerializer(serializers.ModelSerializer):
 
         model = Brand
 
+
         fields = [
+
             "id",
+
             "name",
+
             "logo"
+
         ]
 
 
+
 class BrandCreateSerializer(serializers.ModelSerializer):
+
 
     logo = serializers.ImageField(
         required=False
@@ -158,24 +216,46 @@ class BrandCreateSerializer(serializers.ModelSerializer):
 
         model = Brand
 
+
         fields = [
+
             "name",
+
             "logo"
-        ]        
+
+        ]
+
+
+
+
+
+# =========================
+# Category
+# =========================
+
 
 class CategorySerializer(serializers.ModelSerializer):
+
 
     class Meta:
 
         model = Category
 
+
         fields = [
+
             "id",
+
             "name",
+
             "image"
+
         ]
 
+
+
 class CategoryCreateSerializer(serializers.ModelSerializer):
+
 
     image = serializers.ImageField(
         required=False
@@ -186,24 +266,57 @@ class CategoryCreateSerializer(serializers.ModelSerializer):
 
         model = Category
 
+
         fields = [
+
             "name",
+
             "image"
+
         ]
 
+
+
+
+
+# =========================
+# Product Image
+# =========================
+
+
 class ProductImageSerializer(serializers.ModelSerializer):
+
 
     class Meta:
 
         model = ProductImage
 
+
         fields = [
+
             "id",
+
             "image",
+
             "is_primary"
+
         ]
 
+
+
+
+
+# =========================
+# Product GET
+# =========================
+
+
 class ProductSerializer(serializers.ModelSerializer):
+
+
+    gender = GenderSerializer(
+        read_only=True
+    )
 
 
     brand = BrandSerializer(
@@ -224,62 +337,119 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
 
+
         model = Product
 
 
         fields = [
 
+
             "id",
+
 
             "name",
 
+
             "description",
+
 
             "price",
 
+
             "discount_price",
+
 
             "stock",
 
+
             "is_active",
+
+
+            "gender",
+
 
             "brand",
 
+
             "category",
+
 
             "images"
 
+
         ]
-        
+
+
+
+
+
+
+# =========================
+# Product CREATE / UPDATE
+# =========================
+
+
 class ProductCreateSerializer(serializers.ModelSerializer):
 
+
     images = serializers.ListField(
+
         child=serializers.ImageField(),
+
         required=False,
+
         write_only=True
+
     )
+
 
 
     class Meta:
 
+
         model = Product
+
 
         fields = [
 
+
+            "gender",
+
+
             "brand",
+
+
             "category",
+
+
             "name",
+
+
             "description",
+
+
             "price",
+
+
             "discount_price",
+
+
             "stock",
+
+
             "is_active",
+
+
             "images"
+
 
         ]
 
 
+
+
     def create(self, validated_data):
+
 
         images = validated_data.pop(
             "images",
@@ -292,19 +462,28 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         )
 
 
+
         for image in images:
 
+
             ProductImage.objects.create(
+
                 product=product,
+
                 image=image
+
             )
+
 
 
         return product
 
 
 
+
+
     def update(self, instance, validated_data):
+
 
         images = validated_data.pop(
             "images",
@@ -312,28 +491,35 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         )
 
 
-        # update product fields
 
-        for attr, value in validated_data.items():
+        for attr,value in validated_data.items():
+
 
             setattr(
+
                 instance,
+
                 attr,
+
                 value
+
             )
+
 
 
         instance.save()
 
 
-        # replace old images
 
         if images:
+
 
             instance.images.all().delete()
 
 
+
             for image in images:
+
 
                 ProductImage.objects.create(
 
@@ -342,6 +528,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
                     image=image
 
                 )
+
 
 
         return instance

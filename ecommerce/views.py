@@ -11,9 +11,11 @@ from .serializers import (
     CategorySerializer,
     BrandCreateSerializer,
     CategoryCreateSerializer,
-    ProductCreateSerializer
+    ProductCreateSerializer,
+    GenderSerializer
 )
 from .models import (
+    Gender,
     Brand,
     Category,
     Product,
@@ -136,6 +138,55 @@ class LogoutView(APIView):
 
         )
 
+class GenderListView(APIView):
+
+
+    @extend_schema(
+        responses=GenderSerializer(many=True),
+        description="Get all genders"
+    )
+    def get(self, request):
+
+        genders = Gender.objects.all()
+
+        serializer = GenderSerializer(
+            genders,
+            many=True
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+
+    @extend_schema(
+        request=GenderSerializer,
+        responses=GenderSerializer,
+        description="Create gender"
+    )
+    def post(self, request):
+
+        serializer = GenderSerializer(
+            data=request.data
+        )
+
+
+        if serializer.is_valid():
+
+            serializer.save()
+
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
 class BrandListView(APIView):
 
     @extend_schema(
@@ -438,12 +489,23 @@ class ProductListView(APIView):
             is_active=True
         )
 
+        gender = request.GET.get(
+        "gender"
+        )
+
+        if gender:
+
+         products = products.filter(
+            gender__name__iexact=gender
+         )
+
         serializer=ProductSerializer(
             products,
             many=True
         )
 
         return Response(serializer.data)
+
 
     parser_classes = [
     MultiPartParser,
