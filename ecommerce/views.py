@@ -501,7 +501,10 @@ class ProductListView(APIView):
 
         serializer=ProductSerializer(
             products,
-            many=True
+            many=True,
+            context={
+        "request":request
+    }
         )
 
         return Response(serializer.data)
@@ -531,10 +534,14 @@ class ProductListView(APIView):
 
             return Response(
 
-                ProductSerializer(product).data,
+                ProductSerializer(
+                    product,
+                    context={
+                        "request": request
+                    }
+                ).data,
 
                 status=201
-
             )
 
 
@@ -575,7 +582,12 @@ class ProductDetailView(APIView):
                 status=404
             )
 
-        serializer=ProductSerializer(product)
+        serializer = ProductSerializer(
+            product,
+            context={
+                "request": request
+            }
+        )
 
         return Response(serializer.data)
     
@@ -614,11 +626,13 @@ class ProductDetailView(APIView):
             return Response(
 
                 ProductSerializer(
-                    product
+                    product,
+                    context={
+                        "request": request
+                    }
                 ).data,
 
                 status=200
-
             )
 
         return Response(
