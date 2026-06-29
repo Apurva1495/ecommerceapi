@@ -49,8 +49,16 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'cloudinary',
+    'cloudinary_storage',
     
 ]
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dbxpsin8r',
+    'API_KEY': '571447149371914',
+    'API_SECRET': 'yUn_5QygXR0niUnsIWiYFUKKP_k'
+}
 
 AUTH_USER_MODEL = 'ecommerce.User'
 

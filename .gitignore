@@ -1,31 +1,66 @@
-# Virtual environment
+# =========================
+# Virtual Environment
+# =========================
 env/
 venv/
 .venv/
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
 
-# Django local database (SQLite)
+# =========================
+# Python Cache
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+# =========================
+# Django
+# =========================
+*.log
+
+# Local database
 db.sqlite3
 db.ecommerceapi
 
-# Environment variables
+
+# =========================
+# Environment Variables
+# =========================
 .env
 .env.*
 
-# Django files
-*.log
+
+# =========================
+# Static Files
+# =========================
 staticfiles/
+static/
+
+
+# =========================
+# Media Files
+# Cloudinary handles uploads
+# =========================
 media/
 
+
+# =========================
+# Django Migration Cache
+# =========================
+**/__pycache__/
+# Keep migrations, ignore only cache
+
+
+# =========================
 # IDE
+# =========================
 .vscode/
 .idea/
 
-# OS files
+
+# =========================
+# OS
+# =========================
 .DS_Store
 Thumbs.db
