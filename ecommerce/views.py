@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
+from .serializers import RefreshTokenSerializer
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
@@ -138,6 +139,43 @@ class LogoutView(APIView):
 
         )
 
+class RefreshTokenView(APIView):
+
+    @extend_schema(
+        request=RefreshTokenSerializer,
+        responses={
+            200:{
+                "access":"new_access_token"
+            }
+        },
+        description="Generate new access token using refresh token"
+    )
+    def post(self, request):
+
+        serializer = RefreshTokenSerializer(
+            data=request.data
+        )
+
+
+        if serializer.is_valid():
+
+            return Response(
+
+                serializer.validated_data,
+
+                status=status.HTTP_200_OK
+
+            )
+
+
+        return Response(
+
+            serializer.errors,
+
+            status=status.HTTP_400_BAD_REQUEST
+
+        )
+    
 class GenderListView(APIView):
 
 

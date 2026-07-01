@@ -5,6 +5,7 @@ from .views import (
     RegisterView,
     LoginView,
     LogoutView,
+    RefreshTokenView,
 
     BrandListView,
     BrandDetailView,
@@ -39,6 +40,12 @@ urlpatterns = [
         LogoutView.as_view(),
         name='logout'
     ),
+
+    path(
+        "v1/token/refresh/",
+        RefreshTokenView.as_view()
+    ),
+    
 
      path(
         'v1/genders/',

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
 from .models import (
     User,
@@ -126,6 +127,18 @@ class LoginSerializer(serializers.Serializer):
 
 
 
+class RefreshTokenSerializer(TokenRefreshSerializer):
+
+    def validate(self, attrs):
+
+        data = super().validate(attrs)
+
+        return {
+
+            "access": data["access"]
+
+        }
+
 
 class LogoutSerializer(serializers.Serializer):
 
@@ -153,8 +166,6 @@ class LogoutSerializer(serializers.Serializer):
         return data
 
 
-
-
 # =========================
 # Gender Serializer
 # =========================
@@ -175,9 +186,6 @@ class GenderSerializer(serializers.ModelSerializer):
             "name"
 
         ]
-
-
-
 
 # =========================
 # Brand
@@ -202,8 +210,6 @@ class BrandSerializer(serializers.ModelSerializer):
 
         ]
 
-
-
 class BrandCreateSerializer(serializers.ModelSerializer):
 
 
@@ -224,9 +230,6 @@ class BrandCreateSerializer(serializers.ModelSerializer):
             "logo"
 
         ]
-
-
-
 
 
 # =========================
@@ -252,8 +255,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
         ]
 
-
-
 class CategoryCreateSerializer(serializers.ModelSerializer):
 
 
@@ -274,9 +275,6 @@ class CategoryCreateSerializer(serializers.ModelSerializer):
             "image"
 
         ]
-
-
-
 
 
 # =========================
@@ -301,9 +299,6 @@ class ProductImageSerializer(serializers.ModelSerializer):
             "is_primary"
 
         ]
-
-
-
 
 
 # =========================
@@ -378,10 +373,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
         ]
-
-
-
-
 
 
 # =========================
