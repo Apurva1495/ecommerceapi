@@ -49,7 +49,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
 
-
     login = serializers.CharField()
 
     password = serializers.CharField(
@@ -62,68 +61,85 @@ class LoginSerializer(serializers.Serializer):
         login = data.get("login")
         password = data.get("password")
 
+
         user = None
 
+        try:
 
-        if "@" in login:
-
-            user = authenticate(
-
-                email=login,
-                password=password
-
-            )
-
-
-        else:
-
-            try:
+            if "@" in login:
 
                 user = User.objects.get(
+
+                    email=login
+
+                )
+
+            else:
+
+
+                user = User.objects.get(
+
                     mobile=login
+
                 )
 
 
-                if not user.check_password(password):
 
-                    user = None
-
-
-            except User.DoesNotExist:
+            if not user.check_password(password):
 
                 user = None
 
 
 
+        except User.DoesNotExist:
+
+
+            user = None
+
+
+
+
         if not user:
 
+
             raise serializers.ValidationError(
+
                 "Invalid credentials"
+
             )
+
 
 
 
         refresh = RefreshToken.for_user(user)
 
 
+
         return {
+
 
             "user":{
 
+
                 "id":user.id,
+
                 "first_name":user.first_name,
+
                 "email":user.email,
+
                 "mobile":user.mobile
+
 
             },
 
 
             "access":str(refresh.access_token),
 
+
             "refresh":str(refresh)
 
-        }
 
+        }
 
 
 
